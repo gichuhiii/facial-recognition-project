@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 
 # Open a connection to the default camera (camera index 0)
 cap = cv2.VideoCapture(0)
@@ -13,6 +14,18 @@ skip = 0
 face_data = []
 dataset_path = "./face_dataset/"
 file_name = input("Enter the name of the person: ")
+
+# Ensure that the dataset directory exists
+if not os.path.exists(dataset_path):
+    os.makedirs(dataset_path)
+
+# Ensure that the file doesn't already exist before collecting data
+file_path = os.path.join(dataset_path, file_name + '.npy')
+if os.path.exists(file_path):
+    print(f"File '{file_name}.npy' already exists. Choose a different name.")
+    cap.release()
+    cv2.destroyAllWindows()
+    exit()
 
 # Infinite loop for capturing and processing video frames
 while True:
@@ -69,7 +82,7 @@ while True:
     # Check for the 'q' key press to exit the loop
     # here we have an issue uuuwi uuwi
     key_pressed = cv2.waitKey(1) & 0xFF
-    if key_pressed == ord('q'):
+    if key_pressed == ord('q') or len(face_data) > 7:
         break
 
 # Convert collected face data to a NumPy array and reshape
