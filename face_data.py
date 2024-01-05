@@ -80,7 +80,6 @@ while True:
     cv2.imshow("faces", frame)
 
     # Check for the 'q' key press to exit the loop
-    # here we have an issue uuuwi uuwi
     key_pressed = cv2.waitKey(1) & 0xFF
     if key_pressed == ord('q') or len(face_data) > 7:
         break
