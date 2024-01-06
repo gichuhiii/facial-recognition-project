@@ -1,6 +1,15 @@
 import cv2
 import numpy as np
 import os
+import tkinter as tk
+from tkinter import simpledialog
+
+# Function to get student details using pop-up windows
+def get_student_details():
+    student_name = simpledialog.askstring("Input", "Enter student's name:")
+    admission_number = simpledialog.askstring("Input", "Enter admission number:")
+
+    return student_name, admission_number
 
 # Open a connection to the default camera (camera index 0)
 cap = cv2.VideoCapture(0)
@@ -8,21 +17,22 @@ cap = cv2.VideoCapture(0)
 # Load the pre-trained Haar Cascade classifier for face detection
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-
 # Initialize variables for face data collection
 skip = 0
 face_data = []
 dataset_path = "./face_dataset/"
-file_name = input("Enter the name of the person: ")
+
+# Get student details
+student_name, admission_number = get_student_details()
 
 # Ensure that the dataset directory exists
 if not os.path.exists(dataset_path):
     os.makedirs(dataset_path)
 
 # Ensure that the file doesn't already exist before collecting data
-file_path = os.path.join(dataset_path, file_name + '.npy')
+file_path = os.path.join(dataset_path, f"{admission_number}_{student_name}.npy")
 if os.path.exists(file_path):
-    print(f"File '{file_name}.npy' already exists. Choose a different name.")
+    print(f"File '{admission_number}_{student_name}.npy' already exists. Choose a different name.")
     cap.release()
     cv2.destroyAllWindows()
     exit()
@@ -89,8 +99,8 @@ face_data = np.array(face_data)
 face_data = face_data.reshape((face_data.shape[0], -1))
 
 # Save the collected face data as a NumPy array file
-np.save(dataset_path + file_name, face_data)
-print("Dataset saved at: {}".format(dataset_path + file_name + '.npy'))
+np.save(file_path, face_data)
+print(f"Dataset saved at: {file_path}")
 
 # Release the camera and close all OpenCV windows
 cap.release()
