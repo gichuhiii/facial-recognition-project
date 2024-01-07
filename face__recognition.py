@@ -1,12 +1,11 @@
 import numpy as np
 import cv2
 import os
-
+from tkinter import messagebox
 
 # Function to calculate the Euclidean distance between two vectors
 def distance(v1, v2):
     return np.sqrt(((v1 - v2) ** 2).sum())
-
 
 # Function to perform k-nearest neighbors classification
 def knn(train, test, k=5):
@@ -24,7 +23,6 @@ def knn(train, test, k=5):
     output = np.unique(labels, return_counts=True)
     index = np.argmax(output[1])
     return output[0][index]
-
 
 # Open a connection to the default camera (camera index 0)
 cap = cv2.VideoCapture(0)
@@ -76,6 +74,9 @@ while True:
     # Detect faces in the grayscale frame
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
+    # Initialize flag for visitor detection
+    visitor_detected = True
+
     # Iterate through the detected faces
     for face in faces:
         x, y, w, h = face
@@ -91,6 +92,13 @@ while True:
         # Draw the recognized name and a rectangle around the detected face
         cv2.putText(frame, names[int(out)], (x, y - 10), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
         cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 255), 2)
+
+        # If a face is recognized, set the visitor_detected flag to False
+        visitor_detected = False
+
+    # Display 'Visitor' if no faces are recognized
+    if visitor_detected:
+        cv2.putText(frame, 'Visitor', (10, 50), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
 
     # Display the original frame with the detected faces
     cv2.imshow("Faces", frame)
