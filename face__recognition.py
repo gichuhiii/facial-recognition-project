@@ -7,6 +7,7 @@ from tkinter import messagebox
 def distance(v1, v2):
     return np.sqrt(((v1 - v2) ** 2).sum())
 
+
 # Function to perform k-nearest neighbors classification
 def knn(train, test, k=5):
     dist = []
